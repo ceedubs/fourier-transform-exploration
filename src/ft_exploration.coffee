@@ -24,11 +24,10 @@ dft = (values) ->
 	for k in [0...numPoints]
 		realCoef = imaginaryCoef = 0
 		wk = w0 * k # base frequency for this value of k
-		for i in [0...numPoints]
-			valueAtI = values[i]
+		for y, i in values
 			theta = wk * i
-			realCoef += valueAtI * Math.cos(theta)
-			imaginaryCoef += valueAtI * -1 * Math.sin(theta)
+			realCoef += y * Math.cos(theta)
+			imaginaryCoef += y * -1 * Math.sin(theta)
 		realCoefs[k] = realCoef
 		imaginaryCoefs[k] = imaginaryCoef
 

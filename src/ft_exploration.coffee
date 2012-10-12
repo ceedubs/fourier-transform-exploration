@@ -36,20 +36,21 @@ dft = (values) ->
 
 inverseDft = (realFtCoefs, imaginaryFtCoefs, xValues) ->
 	numCoefs = realFtCoefs.length
+	numXValues = xValues.length
 	realVals = []
 	imaginaryVals = []
 	for x, i in xValues
 		realValAtX = 0
 		imaginaryValAtX = 0
-		w0x = 2 * Math.PI * x / numCoefs
+		w0x = 2 * Math.PI * x / numXValues
 		for k in [0...numCoefs]
 			theta = w0x * k
 			realValAtX += realFtCoefs[k] * Math.cos theta
 			imaginaryValAtX -= imaginaryFtCoefs[k] * Math.sin theta
 
 		# normalize
-		realVals[i] = realValAtX / numCoefs
-		imaginaryVals[i] = imaginaryValAtX / numCoefs
+		realVals[i] = 2 * realValAtX / numXValues
+		imaginaryVals[i] = 2 * imaginaryValAtX / numXValues
 	{ real: realVals, imaginary: imaginaryVals }
 		
 
@@ -66,7 +67,7 @@ if canvas.getContext?
 			ctx.strokeStyle = "black"
 	}
 	squareDft = dft yValues
-	numCoefs = xValues.length
+	numCoefs = 40 # arbitrary - eventually there will be a control to adjust this
 	realCoefs = squareDft.real[0...numCoefs]
 	imaginaryCoefs = squareDft.imaginary[0...numCoefs]
 	recreatedSquareVals = inverseDft realCoefs, imaginaryCoefs, xValues

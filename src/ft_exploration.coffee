@@ -1,3 +1,4 @@
+# plot x/y value pairs on a canvas element
 plot2d = (canvas, xValues, yValues, options) ->
 	ctx = canvas.getContext "2d"
 	if options?.modifyContext?

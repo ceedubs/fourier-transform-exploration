@@ -14,8 +14,8 @@ plot2d = (canvas, xValues, yValues, options) ->
 
 sign = (x) -> if x >= 0 then 1 else -1
 
-squareWave = (xValues, amplitude, period) ->
-	(amplitude * sign Math.sin(2 * Math.PI * x / period) for x in xValues)
+squareWave = (xValues, amplitude, period, phase = 0) ->
+	(amplitude * sign Math.sin(2 * Math.PI * x / period + phase) for x in xValues)
 
 dft = (values) ->
 	numPoints = values.length
@@ -37,8 +37,7 @@ dft = (values) ->
 inverseDft = (realFtCoefs, imaginaryFtCoefs, xValues) ->
 	numCoefs = realFtCoefs.length
 	numXValues = xValues.length
-	realVals = []
-	imaginaryVals = []
+	output = []
 	for x, i in xValues
 		realValAtX = 0
 		imaginaryValAtX = 0
@@ -49,9 +48,8 @@ inverseDft = (realFtCoefs, imaginaryFtCoefs, xValues) ->
 			imaginaryValAtX -= imaginaryFtCoefs[k] * Math.sin theta
 
 		# normalize
-		realVals[i] = 2 * realValAtX / numXValues
-		imaginaryVals[i] = 2 * imaginaryValAtX / numXValues
-	{ real: realVals, imaginary: imaginaryVals }
+		output[i] = 2 / numXValues * (realValAtX + imaginaryValAtX)
+	output
 		
 
 # when page loads
@@ -71,13 +69,8 @@ if canvas.getContext?
 	realCoefs = squareDft.real[0...numCoefs]
 	imaginaryCoefs = squareDft.imaginary[0...numCoefs]
 	recreatedSquareVals = inverseDft realCoefs, imaginaryCoefs, xValues
-	plot2d canvas, xValues, recreatedSquareVals.imaginary, {
+	plot2d canvas, xValues, recreatedSquareVals, {
 		modifyContext: (ctx) ->
 			ctx.lineWidth = 4
 			ctx.strokeStyle = "rgba(256, 0, 0, .25)"
-	}
-	plot2d canvas, xValues, recreatedSquareVals.real, {
-		modifyContext: (ctx) ->
-			ctx.lineWidth = 4
-			ctx.strokeStyle = "rgba(0, 0, 256, .25)"
 	}

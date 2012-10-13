@@ -1,0 +1,10 @@
+{
+  "name": "fourier-transform-exploration",
+  "description": "Using HTML 5 to teach/explore Fourier analysis/transforms",
+  "author": "Cody Allen <ceedubs@gmail.com>",
+	"version": "0.1.0",
+  "dependencies": {
+    "fs-extra": "0.3.x"
+  },
+  "engine": "node >= 0.8.0"
+}

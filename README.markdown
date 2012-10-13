@@ -10,4 +10,4 @@ When I was in college, I found a variety of websites that collectively helped me
 
 Check it out
 ------------
-It's definitely a work in progress, but you can see the beginning of a demo [here](http://ceedubs.github.com/fourier-transform-exploration/)
+It's definitely a work in progress, but you can see the beginning of a demo [here](http://ceedubs.github.com/fourier-transform-exploration/html/index.html)

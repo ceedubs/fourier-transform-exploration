@@ -13,6 +13,11 @@
 		Sorry, this page requires HTML 5 features that your browser does not support.
 	</canvas>
 
-	<script src="../js/ft_exploration.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.0.6/require.min.js" data-main="../js/ft_exploration"></script>
+	<script>
+		require.config({
+			baseUrl: "../js"	
+		});
+	</script>
 </body>
 </html>

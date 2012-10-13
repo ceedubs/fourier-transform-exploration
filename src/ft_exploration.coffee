@@ -66,7 +66,7 @@ if canvas.getContext?
 			ctx.strokeStyle = "black"
 	}
 	squareDftComplexCoefs = dft yValues
-	numCoefs = 40 # arbitrary - eventually there will be a control to adjust this
+	numCoefs = 35 # arbitrary - eventually there will be a control to adjust this
 	recreatedSquareVals = inverseDft squareDftComplexCoefs[0...numCoefs], xValues
 	plot2d canvas, xValues, recreatedSquareVals, {
 		modifyContext: (ctx) ->

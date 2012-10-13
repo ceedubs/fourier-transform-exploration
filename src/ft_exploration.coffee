@@ -20,11 +20,11 @@ squareWave = (xValues, amplitude, period, phase = 0) ->
 class Complex
 	constructor: (@real, @imaginary) ->
 
-dft = (values) ->
-	numPoints = values.length
+dft = (values, numSeriesTerms) ->
+	numSeriesTerms ?= values.length
 	coefs = []
-	w0 = 2 * Math.PI / numPoints # fundamental angular frequency (omega naught)
-	for k in [0...numPoints]
+	w0 = 2 * Math.PI / values.length # fundamental angular frequency (omega naught)
+	for k in [0...numSeriesTerms]
 		realCoef = imaginaryCoef = 0
 		wk = w0 * k # base frequency for this value of k
 		for y, i in values
@@ -65,9 +65,9 @@ if canvas.getContext?
 			ctx.lineWidth = 1
 			ctx.strokeStyle = "black"
 	}
-	squareDftComplexCoefs = dft yValues
 	numCoefs = 35 # arbitrary - eventually there will be a control to adjust this
-	recreatedSquareVals = inverseDft squareDftComplexCoefs[0...numCoefs], xValues
+	squareDftComplexCoefs = dft yValues, numCoefs
+	recreatedSquareVals = inverseDft squareDftComplexCoefs, xValues
 	plot2d canvas, xValues, recreatedSquareVals, {
 		modifyContext: (ctx) ->
 			ctx.lineWidth = 4

@@ -17,10 +17,12 @@ sign = (x) -> if x >= 0 then 1 else -1
 squareWave = (xValues, amplitude, period, phase = 0) ->
 	(amplitude * sign Math.sin(2 * Math.PI * x / period + phase) for x in xValues)
 
+class Complex
+	constructor: (@real, @imaginary) ->
+
 dft = (values) ->
 	numPoints = values.length
-	realCoefs = []
-	imaginaryCoefs = []
+	coefs = []
 	w0 = 2 * Math.PI / numPoints # fundamental angular frequency (omega naught)
 	for k in [0...numPoints]
 		realCoef = imaginaryCoef = 0
@@ -29,23 +31,22 @@ dft = (values) ->
 			theta = wk * i
 			realCoef += y * Math.cos(theta)
 			imaginaryCoef += y * -1 * Math.sin(theta)
-		realCoefs[k] = realCoef
-		imaginaryCoefs[k] = imaginaryCoef
+		coefs[k] = new Complex realCoef, imaginaryCoef
 
-	{ real: realCoefs, imaginary: imaginaryCoefs }
+	coefs
 
-inverseDft = (realFtCoefs, imaginaryFtCoefs, xValues) ->
-	numCoefs = realFtCoefs.length
+inverseDft = (complexCoefs, xValues) ->
+	numCoefs = complexCoefs.length
 	numXValues = xValues.length
 	output = []
 	for x, i in xValues
 		realValAtX = 0
 		imaginaryValAtX = 0
 		w0x = 2 * Math.PI * x / numXValues
-		for k in [0...numCoefs]
+		for complexCoef, k in complexCoefs
 			theta = w0x * k
-			realValAtX += realFtCoefs[k] * Math.cos theta
-			imaginaryValAtX -= imaginaryFtCoefs[k] * Math.sin theta
+			realValAtX += complexCoef.real * Math.cos theta
+			imaginaryValAtX -= complexCoef.imaginary * Math.sin theta
 
 		# normalize
 		output[i] = 2 / numXValues * (realValAtX + imaginaryValAtX)
@@ -55,7 +56,7 @@ inverseDft = (realFtCoefs, imaginaryFtCoefs, xValues) ->
 # when page loads
 canvas = document.getElementById "ft-exploration-canvas"
 if canvas.getContext?
-	amplitude = canvas.height / 2 * 0.9
+	amplitude = canvas.height / 2 * 0.75
 	period = canvas.width / 3
 	xValues = [0..canvas.width]
 	yValues = squareWave xValues, amplitude, period
@@ -64,11 +65,9 @@ if canvas.getContext?
 			ctx.lineWidth = 1
 			ctx.strokeStyle = "black"
 	}
-	squareDft = dft yValues
+	squareDftComplexCoefs = dft yValues
 	numCoefs = 40 # arbitrary - eventually there will be a control to adjust this
-	realCoefs = squareDft.real[0...numCoefs]
-	imaginaryCoefs = squareDft.imaginary[0...numCoefs]
-	recreatedSquareVals = inverseDft realCoefs, imaginaryCoefs, xValues
+	recreatedSquareVals = inverseDft squareDftComplexCoefs[0...numCoefs], xValues
 	plot2d canvas, xValues, recreatedSquareVals, {
 		modifyContext: (ctx) ->
 			ctx.lineWidth = 4

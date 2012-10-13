@@ -108,13 +108,12 @@
       numCoefs = 35;
       squareDftComplexCoefs = dft(yValues, numCoefs);
       recreatedSquareVals = inverseDft(squareDftComplexCoefs, xValues);
-      plot2d(canvas, xValues, recreatedSquareVals, {
+      return plot2d(canvas, xValues, recreatedSquareVals, {
         modifyContext: function(ctx) {
           ctx.lineWidth = 4;
           return ctx.strokeStyle = "rgba(256, 0, 0, .25)";
         }
       });
-      return temp.addAuthor();
     }
   });
 

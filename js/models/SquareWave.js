@@ -25,11 +25,16 @@
       };
 
       SquareWave.prototype.initialize = function() {
-        return this._yValues = this._calculateYValues();
+        this.updateYValues();
+        return this.on("change:amplitude change:period change:phase change:xValues", this.updateYValues);
+      };
+
+      SquareWave.prototype.updateYValues = function() {
+        return this.set("yValues", this._calculateYValues());
       };
 
       SquareWave.prototype.yValues = function() {
-        return this._yValues;
+        return this.get("yValues");
       };
 
       SquareWave.prototype._calculateYValues = function() {

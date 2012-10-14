@@ -2,7 +2,7 @@
 (function() {
 
   require(['models/SquareWave', 'models/PointSet', 'views/PlotView', 'signal'], function(SquareWave, PointSet, PlotView, signal) {
-    var numCoefs, plot, plotView, recreatedSquareVals, recreatedSquareWave, squareDftComplexCoefs, squareWave, _i, _ref, _results;
+    var calculateRecreatedSquareWave, numCoefs, plot, plotView, recreatedSquareWave, squareWave, _i, _ref, _results;
     numCoefs = 35;
     plot = document.getElementById("ft-exploration-canvas");
     squareWave = new SquareWave({
@@ -16,13 +16,19 @@
       plotColor: "black",
       plotLineWidth: 1
     });
-    squareDftComplexCoefs = signal.dft(squareWave.yValues(), numCoefs);
-    recreatedSquareVals = signal.inverseDft(squareDftComplexCoefs, squareWave.xValues());
+    calculateRecreatedSquareWave = function() {
+      var squareDftComplexCoefs;
+      squareDftComplexCoefs = signal.dft(squareWave.yValues(), numCoefs);
+      return signal.inverseDft(squareDftComplexCoefs, squareWave.xValues());
+    };
     recreatedSquareWave = new PointSet({
       xValues: squareWave.xValues(),
-      yValues: recreatedSquareVals,
+      yValues: calculateRecreatedSquareWave(),
       plotColor: "rgba(0, 0, 256, .25)",
       plotLineWidth: 3
+    });
+    squareWave.on("change:yValues", function() {
+      return recreatedSquareWave.set("yValues", calculateRecreatedSquareWave());
     });
     plotView = new PlotView({
       el: plot,

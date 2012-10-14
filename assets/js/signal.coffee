@@ -1,8 +1,4 @@
 define [], () ->
-	sign = (x) -> if x >= 0 then 1 else -1
-
-	squareWave = (xValues, amplitude, period, phase = 0) ->
-		(amplitude * sign Math.sin(2 * Math.PI * x / period + phase) for x in xValues)
 
 	class Complex
 		constructor: (@real, @imaginary) ->
@@ -40,7 +36,6 @@ define [], () ->
 		output
 
 	{
-		squareWave
 		Complex
 		dft
 		inverseDft

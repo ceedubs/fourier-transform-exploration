@@ -25,7 +25,7 @@ task 'build', 'Build _site/lib from src/', ->
 	build()
 
 task 'watch', 'Watch src/ for changes', ->
-	cpPublic() ->
+	cpPublic () ->
 		coffee = spawn 'coffee', ['-w', '-c', '-o', '_site/js', 'assets/js']
 		coffee.stderr.on 'data', (data) ->
 				process.stderr.write data.toString()

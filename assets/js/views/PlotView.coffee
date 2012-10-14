@@ -2,7 +2,10 @@ define ['vendor/backbone', 'plot'], (Backbone, plot) ->
 	class PlotView extends Backbone.View
 		tagName: "canvas"
 
-		render: () ->
+		initialize: ->
+			@collection.on "change", @render
+
+		render: () =>
 			ctx = @el.getContext "2d"
 			ctx.clearRect 0, 0, @el.width, @el.height
 			@collection.each (pointSet) =>

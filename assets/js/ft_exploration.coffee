@@ -10,13 +10,18 @@ require ['models/SquareWave', 'models/PointSet', 'views/PlotView', 'signal'], (S
 		plotColor: "black"
 		plotLineWidth: 1
 
-	squareDftComplexCoefs = signal.dft squareWave.yValues(), numCoefs
-	recreatedSquareVals = signal.inverseDft squareDftComplexCoefs, squareWave.xValues()
+	calculateRecreatedSquareWave = () ->
+		squareDftComplexCoefs = signal.dft squareWave.yValues(), numCoefs
+		signal.inverseDft squareDftComplexCoefs, squareWave.xValues()
+
 	recreatedSquareWave = new PointSet
 		xValues: squareWave.xValues()
-		yValues: recreatedSquareVals
+		yValues: calculateRecreatedSquareWave()
 		plotColor: "rgba(0, 0, 256, .25)"
 		plotLineWidth: 3
+
+	squareWave.on "change:yValues", () ->
+		recreatedSquareWave.set "yValues", calculateRecreatedSquareWave()
 		
 	plotView = new PlotView
 		el: plot

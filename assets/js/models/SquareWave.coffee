@@ -6,9 +6,13 @@ define ['models/PointSet'], (PointSet) ->
 			phase: 0
 
 		initialize: () ->
-			@_yValues = @_calculateYValues()
+			@updateYValues()
+			@on "change:amplitude change:period change:phase change:xValues", @updateYValues
 
-		yValues: () -> @_yValues
+		updateYValues: () ->
+			@set "yValues", @_calculateYValues()
+
+		yValues: () -> @get "yValues"
 
 		_calculateYValues: () ->
 			((@get "amplitude") * sign Math.sin(2 * Math.PI * x / (@get "period") + (@get "phase")) for x in (@get "xValues"))

@@ -2,26 +2,7 @@
 (function() {
 
   define([], function() {
-    var Complex, dft, inverseDft, sign, squareWave;
-    sign = function(x) {
-      if (x >= 0) {
-        return 1;
-      } else {
-        return -1;
-      }
-    };
-    squareWave = function(xValues, amplitude, period, phase) {
-      var x, _i, _len, _results;
-      if (phase == null) {
-        phase = 0;
-      }
-      _results = [];
-      for (_i = 0, _len = xValues.length; _i < _len; _i++) {
-        x = xValues[_i];
-        _results.push(amplitude * sign(Math.sin(2 * Math.PI * x / period + phase)));
-      }
-      return _results;
-    };
+    var Complex, dft, inverseDft;
     Complex = (function() {
 
       function Complex(real, imaginary) {
@@ -73,7 +54,6 @@
       return output;
     };
     return {
-      squareWave: squareWave,
       Complex: Complex,
       dft: dft,
       inverseDft: inverseDft

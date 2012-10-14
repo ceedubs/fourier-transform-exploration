@@ -16,7 +16,21 @@
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.0.6/require.min.js" data-main="../js/ft_exploration"></script>
 	<script>
 		require.config({
-			baseUrl: "../js"	
+			baseUrl: "../js",
+			paths: {
+				"vendor/backbone": "vendor/backbone-min",
+				"vendor/underscore": "vendor/underscore-min",
+				"vendor/jquery": "vendor/jquery-1.8.2.min"
+			},
+			shim: {
+				'vendor/underscore': {
+					exports: "_"
+				},
+				'vendor/backbone': {
+					deps: ['vendor/underscore', 'vendor/jquery'],
+					exports: "Backbone"
+				}
+			}
 		});
 	</script>
 </body>

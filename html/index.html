@@ -4,6 +4,7 @@
 	<meta charset="utf-8">
 	<title>Fourier Transform Exploration</title>
 	<link rel="stylesheet" href="../css/style.css">
+	<link rel="stylesheet" href="../css/jquery-ui/jquery-ui-1.9.0.custom.min.css">
 	<!--[if lt IE 9]>
 	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
@@ -13,6 +14,9 @@
 		Sorry, this page requires HTML 5 features that your browser does not support.
 	</canvas>
 
+	<section id="wave-editor-form">
+	</section>
+
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.0.6/require.min.js" data-main="../js/ft_exploration"></script>
 	<script>
 		require.config({
@@ -21,7 +25,8 @@
 				"backbone": "backbone-min",
 				"underscore": "underscore-min",
 				"jquery": "jquery-1.8.2.min",
-				"hogan": "hogan-2.0.0"
+				"hogan": "hogan-2.0.0",
+				"jquery-ui": "jquery-ui-1.9.0.custom.min"
 			},
 			shim: {
 				'underscore': {
@@ -33,6 +38,9 @@
 				},
 				'hogan': {
 					exports: "Hogan"
+				},
+				'jquery-ui': {
+					deps: ['jquery']
 				}
 			}
 		});

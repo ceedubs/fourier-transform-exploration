@@ -1,3 +1,11 @@
 #ft-exploration-canvas {
 	border: 1px solid rgb(120, 120, 120);
 }
+
+.fourier-series-wave-editor .fourier-series-terms-count-slider {
+	width: 300px;
+}
+
+dl.label-value dt, dl.label-value dd {
+	float: left;
+}

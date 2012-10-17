@@ -111,6 +111,8 @@ build = (callback) ->
 				'backbone': 'empty:'
 				'underscore': 'empty:'
 				'hogan': 'empty:'
+				'jquery': 'empty:'
+				'jquery-ui': 'empty:'
 		requirejs.optimize rjsConfig, (buildResponse) ->
 			cb?()
 

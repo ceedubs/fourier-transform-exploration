@@ -1,4 +1,4 @@
-require ['models/SquareWave', 'models/PointSet', 'views/PlotView', 'signal', ], (SquareWave, PointSet, PlotView, signal) ->
+require ['models/SquareWave', 'models/PointSet', 'views/PlotView', 'models/DftPointSet', 'views/FourierSeriesWaveEditorView'], (SquareWave, PointSet, PlotView, DftPointSet, FourierSeriesWaveEditorView) ->
 	# when page loads
 	numCoefs = 35 # arbitrary - eventually there will be a control to adjust this
 
@@ -10,18 +10,16 @@ require ['models/SquareWave', 'models/PointSet', 'views/PlotView', 'signal', ], 
 		plotColor: "black"
 		plotLineWidth: 1
 
-	calculateRecreatedSquareWave = () ->
-		squareDftComplexCoefs = signal.dft squareWave.yValues(), numCoefs
-		signal.inverseDft squareDftComplexCoefs, squareWave.xValues()
-
-	recreatedSquareWave = new PointSet
-		xValues: squareWave.xValues()
-		yValues: calculateRecreatedSquareWave()
+	recreatedSquareWave = new DftPointSet
+		emulationPointSet: squareWave
 		plotColor: "rgba(0, 0, 256, .25)"
 		plotLineWidth: 3
 
-	squareWave.on "change:yValues", () ->
-		recreatedSquareWave.set "yValues", calculateRecreatedSquareWave()
+	$editorForm = $ "#wave-editor-form"
+	recreatedSquareWaveEditorView = new FourierSeriesWaveEditorView
+		el: $editorForm
+		model: recreatedSquareWave
+	recreatedSquareWaveEditorView.render()
 		
 	plotView = new PlotView
 		el: plot

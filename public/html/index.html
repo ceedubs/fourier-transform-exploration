@@ -18,17 +18,21 @@
 		require.config({
 			baseUrl: "../js",
 			paths: {
-				"vendor/backbone": "vendor/backbone-min",
-				"vendor/underscore": "vendor/underscore-min",
-				"vendor/jquery": "vendor/jquery-1.8.2.min"
+				"backbone": "backbone-min",
+				"underscore": "underscore-min",
+				"jquery": "jquery-1.8.2.min",
+				"hogan": "hogan-2.0.0"
 			},
 			shim: {
-				'vendor/underscore': {
+				'underscore': {
 					exports: "_"
 				},
-				'vendor/backbone': {
-					deps: ['vendor/underscore', 'vendor/jquery'],
+				'backbone': {
+					deps: ['underscore', 'jquery'],
 					exports: "Backbone"
+				},
+				'hogan': {
+					exports: "Hogan"
 				}
 			}
 		});

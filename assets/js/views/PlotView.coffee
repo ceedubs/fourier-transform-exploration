@@ -1,4 +1,4 @@
-define ['vendor/backbone', 'plot'], (Backbone, plot) ->
+define ['backbone', 'plot'], (Backbone, plot) ->
 	class PlotView extends Backbone.View
 		tagName: "canvas"
 

@@ -1,4 +1,4 @@
-require ['models/SquareWave', 'models/PointSet', 'views/PlotView', 'signal'], (SquareWave, PointSet, PlotView, signal) ->
+require ['models/SquareWave', 'models/PointSet', 'views/PlotView', 'signal', ], (SquareWave, PointSet, PlotView, signal) ->
 	# when page loads
 	numCoefs = 35 # arbitrary - eventually there will be a control to adjust this
 

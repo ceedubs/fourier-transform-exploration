@@ -4,7 +4,12 @@
   "author": "Cody Allen <ceedubs@gmail.com>",
 	"version": "0.1.0",
   "dependencies": {
-    "fs-extra": "0.3.x"
+    "fs-extra": "0.3.x",
+		"hogan.js": "2.0.x",
+		"glob": "3.1.x",
+		"requirejs": "2.1.x",
+		"async": "0.1.x",
+		"underscore": "1.4.x"
   },
   "engine": "node >= 0.8.0"
 }

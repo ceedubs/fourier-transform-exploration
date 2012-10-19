@@ -14,11 +14,11 @@ define ['backbone', 'models/Point2d', 'models/PointSet', 'signal'], (Backbone, P
 			emuPointSet = @get "emulationPointSet"
 			newXValues = flatMap emuPointSet.models, (point) -> point.get "x"
 			newEmuYValues = flatMap emuPointSet.models, (point) -> point.get "y"
-			dftCoefs = signal.dft (newEmuYValues), (@get "termsCount")
+			dftCoefs = signal.dft newEmuYValues, (@get "termsCount")
 			newYValues = signal.inverseDft dftCoefs, newXValues
-			(@get "points").reset _.map(_.zip(newXValues, newYValues), (point) ->
+			newPoints = _.map _.zip(newXValues, newYValues), (point) ->
 				[x, y] = point
 				new Point2d
 					x: x
 					y: y
-			)
+			(@get "points").reset newPoints

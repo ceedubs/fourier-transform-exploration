@@ -1,18 +1,23 @@
-define ['models/PointSet'], (PointSet) ->
-	sign = (x) -> if x >= 0 then 1 else -1
-
-	class SquareWave extends PointSet
+define ['backbone', 'models/PointSet', 'models/Point2d'], (Backbone, PointSet, Point2d) ->
+	class SquareWave extends Backbone.Model
 		defaults:
 			phase: 0
+			amplitude: 1
 
 		initialize: () ->
-			@updateYValues()
-			@on "change:amplitude change:period change:phase change:xValues", @updateYValues
+			@set "points", new PointSet
+			@updatePoints()
+			@on "change:amplitude change:period change:phase change:xValues", @updatePoints
 
-		updateYValues: () ->
-			@set "yValues", @_calculateYValues()
+		updatePoints: () =>
+			xValues = @get "xValues"
+			(@get "points").reset _.map(xValues, (x) =>
+				new Point2d
+					x: x
+					y: @_calculateYValue x
+			)
+			@
 
-		yValues: () -> @get "yValues"
-
-		_calculateYValues: () ->
-			((@get "amplitude") * sign Math.sin(2 * Math.PI * x / (@get "period") + (@get "phase")) for x in (@get "xValues"))
+		_calculateYValue: (x) =>
+			sign = (x) -> if x >= 0 then 1 else -1
+			(@get "amplitude") * sign Math.sin(2 * Math.PI * x / (@get "period") + (@get "phase"))

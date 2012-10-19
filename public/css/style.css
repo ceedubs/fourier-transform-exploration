@@ -1,5 +1,6 @@
 #ft-exploration-canvas {
 	border: 1px solid rgb(120, 120, 120);
+	margin: 10px;
 }
 
 .fourier-series-wave-editor .fourier-series-terms-count-slider {

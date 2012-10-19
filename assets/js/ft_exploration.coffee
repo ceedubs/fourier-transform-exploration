@@ -1,19 +1,13 @@
-require ['models/SquareWave', 'models/PointSet', 'views/PlotView', 'models/DftPointSet', 'views/FourierSeriesWaveEditorView'], (SquareWave, PointSet, PlotView, DftPointSet, FourierSeriesWaveEditorView) ->
+require ['models/SquareWave', 'models/PlotPointSet', 'views/PlotView', 'models/DiscreteFourierSeries', 'views/FourierSeriesWaveEditorView'], (SquareWave, PlotPointSet, PlotView, DiscreteFourierSeries, FourierSeriesWaveEditorView) ->
 	# when page loads
-	numCoefs = 35 # arbitrary - eventually there will be a control to adjust this
-
 	plot = document.getElementById "ft-exploration-canvas"
+	numCycles = 3
 	squareWave = new SquareWave
-		amplitude: plot.height / 2 * 0.75
-		period: plot.width / 3
-		xValues: [0..plot.width]
-		plotColor: "black"
-		plotLineWidth: 1
+		period: plot.width / numCycles
+		xValues: (x for x in [0..plot.width])
 
-	recreatedSquareWave = new DftPointSet
-		emulationPointSet: squareWave
-		plotColor: "rgba(0, 0, 256, .25)"
-		plotLineWidth: 3
+	recreatedSquareWave = new DiscreteFourierSeries
+		emulationPointSet: squareWave.get "points"
 
 	$editorForm = $ "#wave-editor-form"
 	recreatedSquareWaveEditorView = new FourierSeriesWaveEditorView
@@ -23,5 +17,14 @@ require ['models/SquareWave', 'models/PointSet', 'views/PlotView', 'models/DftPo
 		
 	plotView = new PlotView
 		el: plot
-		collection: new Backbone.Collection [squareWave, recreatedSquareWave]
+		collection: new Backbone.Collection [
+			new PlotPointSet
+				points: squareWave.get "points"
+				color: "black"
+				lineWidth: "1"
+			new PlotPointSet
+				points: recreatedSquareWave.get "points"
+				color: "rgba(0, 0, 256, .25)"
+				lineWidth: 3
+		]
 	plotView.render()

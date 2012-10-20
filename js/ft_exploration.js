@@ -182,7 +182,7 @@
       PlotView.prototype.initialize = function() {
         var _base, _ref;
         if ((_ref = (_base = this.options).rescaleYValues) == null) {
-          _base.rescaleYValues = true;
+          _base.rescaleYValues = false;
         }
         return this.collection.on("all", this.render);
       };

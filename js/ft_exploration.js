@@ -169,6 +169,10 @@
       __extends(PlotView, _super);
 
       function PlotView() {
+        this._xPixelConverter = __bind(this._xPixelConverter, this);
+
+        this._yPixelConverter = __bind(this._yPixelConverter, this);
+
         this.render = __bind(this.render, this);
         return PlotView.__super__.constructor.apply(this, arguments);
       }
@@ -176,47 +180,18 @@
       PlotView.prototype.tagName = "canvas";
 
       PlotView.prototype.initialize = function() {
+        var _base, _ref;
+        if ((_ref = (_base = this.options).rescaleYValues) == null) {
+          _base.rescaleYValues = true;
+        }
         return this.collection.on("all", this.render);
       };
 
       PlotView.prototype.render = function() {
-        var allXs, allYs, ctx, maxX, maxY, minX, minY, newYMin, toXPixel, toYPixel, xPixelCount, yPixelCount, yScale, yScaleFactor, _ref, _ref1, _ref2,
+        var ctx, toXPixel, toYPixel,
           _this = this;
-        allXs = flatMap(this.collection.models, function(plotPointSet) {
-          var pointSet;
-          pointSet = plotPointSet.get("points");
-          return flatMap(pointSet.models, function(point) {
-            return point.get("x");
-          });
-        });
-        allYs = flatMap(this.collection.models, function(plotPointSet) {
-          var pointSet;
-          pointSet = plotPointSet.get("points");
-          return flatMap(pointSet.models, function(point) {
-            return point.get("y");
-          });
-        });
-        _ref = [_.min(allXs), _.max(allXs)], minX = _ref[0], maxX = _ref[1];
-        _ref1 = [_.min(allYs), _.max(allYs)], minY = _ref1[0], maxY = _ref1[1];
-        xPixelCount = this.el.width;
-        yPixelCount = this.el.height;
-        yScaleFactor = (_ref2 = this.options.yScaleFactor) != null ? _ref2 : .9;
-        toXPixel = linearScale({
-          oldMin: minX,
-          oldMax: maxX,
-          newMin: 0,
-          newMax: xPixelCount
-        });
-        newYMin = (1 - yScaleFactor) * yPixelCount;
-        yScale = linearScale({
-          oldMin: minY,
-          oldMax: maxY,
-          newMin: newYMin,
-          newMax: yScaleFactor * yPixelCount
-        });
-        toYPixel = function(y) {
-          return yPixelCount - (newYMin + yScale(y));
-        };
+        toXPixel = this._xPixelConverter();
+        toYPixel = this._yPixelConverter();
         ctx = this.el.getContext("2d");
         ctx.clearRect(0, 0, this.el.width, this.el.height);
         this.collection.each(function(plotPointSet) {
@@ -239,6 +214,52 @@
           return ctx.stroke();
         });
         return this;
+      };
+
+      PlotView.prototype._yPixelConverter = function() {
+        var allYs, maxY, minY, newYMin, yPixelCount, yScale, yScaleFactor, _ref, _ref1;
+        if ((this._cachedYPixelConverter != null) && !this.options.rescaleYValues) {
+          return this._cachedYPixelConverter;
+        }
+        allYs = flatMap(this.collection.models, function(plotPointSet) {
+          var pointSet;
+          pointSet = plotPointSet.get("points");
+          return flatMap(pointSet.models, function(point) {
+            return point.get("y");
+          });
+        });
+        _ref = [_.min(allYs), _.max(allYs)], minY = _ref[0], maxY = _ref[1];
+        yPixelCount = this.el.height;
+        yScaleFactor = (_ref1 = this.options.yScaleFactor) != null ? _ref1 : .9;
+        newYMin = (1 - yScaleFactor) * yPixelCount;
+        yScale = linearScale({
+          oldMin: minY,
+          oldMax: maxY,
+          newMin: newYMin,
+          newMax: yScaleFactor * yPixelCount
+        });
+        return this._cachedYPixelConverter = function(y) {
+          return yPixelCount - (newYMin + yScale(y));
+        };
+      };
+
+      PlotView.prototype._xPixelConverter = function() {
+        var allXs, maxX, minX, xPixelCount, _ref;
+        allXs = flatMap(this.collection.models, function(plotPointSet) {
+          var pointSet;
+          pointSet = plotPointSet.get("points");
+          return flatMap(pointSet.models, function(point) {
+            return point.get("x");
+          });
+        });
+        _ref = [_.min(allXs), _.max(allXs)], minX = _ref[0], maxX = _ref[1];
+        xPixelCount = this.el.width;
+        return linearScale({
+          oldMin: minX,
+          oldMax: maxX,
+          newMin: 0,
+          newMax: xPixelCount
+        });
       };
 
       return PlotView;

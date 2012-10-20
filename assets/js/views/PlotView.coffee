@@ -10,34 +10,12 @@ define ['backbone', 'underscore', 'models/Point2d'], (Backbone, _, Point2d) ->
 		tagName: "canvas"
 
 		initialize: ->
+			@options.rescaleYValues ?= false
 			@collection.on "all", @render
 
 		render: =>
-			allXs = flatMap @collection.models, (plotPointSet) ->
-				pointSet = plotPointSet.get "points"
-				flatMap pointSet.models, (point) -> point.get "x"
-			allYs = flatMap @collection.models, (plotPointSet) ->
-				pointSet = plotPointSet.get "points"
-				flatMap pointSet.models, (point) -> point.get "y"
-			[minX, maxX] = [_.min(allXs), _.max(allXs)]
-			[minY, maxY] = [_.min(allYs), _.max(allYs)]
-			xPixelCount = @el.width
-			yPixelCount = @el.height
-			yScaleFactor = @options.yScaleFactor ? .9
-			toXPixel = linearScale
-				oldMin: minX
-				oldMax: maxX
-				newMin: 0
-				newMax: xPixelCount
-			newYMin = (1 - yScaleFactor) * yPixelCount
-			yScale = linearScale
-				oldMin: minY
-				oldMax: maxY
-				newMin: newYMin 
-				newMax: yScaleFactor * yPixelCount
-			toYPixel = (y) ->
-				yPixelCount - (newYMin + yScale(y))
-				
+			toXPixel = @_xPixelConverter()
+			toYPixel = @_yPixelConverter()
 			ctx = @el.getContext "2d"
 			ctx.clearRect 0, 0, @el.width, @el.height
 			@collection.each (plotPointSet) =>
@@ -56,3 +34,33 @@ define ['backbone', 'underscore', 'models/Point2d'], (Backbone, _, Point2d) ->
 					ctx.lineTo((point.get "x"), (point.get "y"))
 				ctx.stroke()
 			@
+
+		_yPixelConverter: =>
+			if @_cachedYPixelConverter? and not @options.rescaleYValues
+				return @_cachedYPixelConverter
+			allYs = flatMap @collection.models, (plotPointSet) ->
+				pointSet = plotPointSet.get "points"
+				flatMap pointSet.models, (point) -> point.get "y"
+			[minY, maxY] = [_.min(allYs), _.max(allYs)]
+			yPixelCount = @el.height
+			yScaleFactor = @options.yScaleFactor ? .9
+			newYMin = (1 - yScaleFactor) * yPixelCount
+			yScale = linearScale
+				oldMin: minY
+				oldMax: maxY
+				newMin: newYMin
+				newMax: yScaleFactor * yPixelCount
+			@_cachedYPixelConverter = (y) ->
+				yPixelCount - (newYMin + yScale(y))
+				
+		_xPixelConverter: =>
+			allXs = flatMap @collection.models, (plotPointSet) ->
+				pointSet = plotPointSet.get "points"
+				flatMap pointSet.models, (point) -> point.get "x"
+			[minX, maxX] = [_.min(allXs), _.max(allXs)]
+			xPixelCount = @el.width
+			linearScale
+				oldMin: minX
+				oldMax: maxX
+				newMin: 0
+				newMax: xPixelCount
